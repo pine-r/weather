@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+	<title>雾霾探测</title>
+	<script type="text/javascript" src="https://www.nowapi.com/style/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=RXWdRMYGQ4hapjq4bVcYPFui31E1nl1P"></script>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"></link>
+	<link rel="stylesheet" type="text/css" href="css/weather.css"></link>
+<script> 
+function getCity() {
+    var geolocation = new BMap.Geolocation();
+    geolocation.getCurrentPosition(function getinfo(position){
+        city = position.address.city; //获取城市信息
+        city = city.substring(0,2);
+        $.ajax({
+        type          : 'get',
+        async         : false,
+        url           : 'http://api.k780.com/?app=weather.today&weaid='+city+'&appkey=36793&sign=8f56f4e92ddf49a6b2a8d7e67c3e514b&format=json&jsoncallback=data',
+        dataType      : 'jsonp',
+        jsonp         : 'callback',
+        jsonpCallback : 'data',
+        success       : function(data){
+            if(data.success!='1'){
+                alert(data.msgid+' '+data.msg);
+                exit;
+            }
+            $(".city").text(data.result.citynm);
+            $(".weather").text(data.result.weather);
+            $(".temperature").text(data.result.temperature_curr);
+            $(".img").attr("src",data.result.weather_icon);
+
+            
+        },
+        error:function(){
+            alert('fail');
+        }
+    });
+     $.ajax({
+        type          : 'get',
+        async         : false,
+        url           : 'http://api.k780.com/?app=weather.pm25&weaid='+city+'&appkey=36793&sign=8f56f4e92ddf49a6b2a8d7e67c3e514b&format=json&jsoncallback=data',
+        dataType      : 'jsonp',
+        jsonp         : 'callback',
+        jsonpCallback : 'data',
+        success       : function(data){
+            if(data.success!='1'){
+                alert(data.msgid+' '+data.msg);
+                exit;
+            }
+            $(".air").text(data.result.aqi_levnm);
+            $(".air_num").text(data.result.aqi);
+            
+        },
+        error:function(){
+            alert('fail');
+        }
+    });
+    }, function(e) {
+        alert("获取百度定位位置信息失败");
+    }, {provider: 'baidu'});
+}
+function search(){
+        var cityName = $("#searchCity").val();
+        $.ajax({
+        type          : 'get',
+        async         : false,
+        url           : 'http://api.k780.com/?app=weather.today&weaid='+cityName+'&appkey=36793&sign=8f56f4e92ddf49a6b2a8d7e67c3e514b&format=json&jsoncallback=data',
+        dataType      : 'jsonp',
+        jsonp         : 'callback',
+        jsonpCallback : 'data',
+        success       : function(data){
+            if(data.success!='1'){
+                alert(data.msgid+' '+data.msg);
+                exit;
+            }
+            $(".city").text(data.result.citynm);
+            $(".weather").text(data.result.weather);
+            $(".temperature").text(data.result.temperature_curr);
+            $(".img").attr("src",data.result.weather_icon);
+        },
+        error:function(){
+            alert('fail');
+        }
+    });
+     $.ajax({
+        type          : 'get',
+        async         : false,
+        url           : 'http://api.k780.com/?app=weather.pm25&weaid='+cityName+'&appkey=36793&sign=8f56f4e92ddf49a6b2a8d7e67c3e514b&format=json&jsoncallback=data',
+        dataType      : 'jsonp',
+        jsonp         : 'callback',
+        jsonpCallback : 'data',
+        success       : function(data){
+            if(data.success!='1'){
+                alert(data.msgid+' '+data.msg);
+                exit;
+            }
+            $(".air").text(data.result.aqi_levnm);
+            $(".air_num").text(data.result.aqi);
+        },
+        error:function(){
+            alert('fail');
+        }
+    });
+   }
+function test(){
+    alert("message?: DOMString");
+}
+$(document).ready(function(){
+   getCity();
+}); 
+</script>
+</head>
+<body>
+    <div class="container ">
+        <div class="top input-group input-group-sm">
+        	<div class="search-box"><input type="text" class="input-box form-control" name="cityName" id="searchCity" placeholder="请输入城市"/></div><div class="search-button"><button class="search btn btn-primary" onclick="search()">搜索</button></div>
+        </div>
+        <div class="weather-detail">
+	        <p >城市：<span class="city"></span></p><br/>
+	        <p class="weather-icon">今天天气：<span class="weather"></span><img class="img" style="width:30px;height:25px;"/></p><br/>
+	        <p >当前温度：<span class="temperature"></span></p><br/>
+	        <p >空气质量：<span class="air"></span></p><br/>
+	        <p>空气质量指数：<span class="air_num"></span> </p><br/>
+        </div>
+    </div>
+</body>
+</html>
