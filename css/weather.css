@@ -1,0 +1,51 @@
+.container{
+	width:350px;
+	height:600px;
+	background-image:url(../images/background1.jpeg);
+	background-size:350px 600px;
+}
+
+.top{
+	margin-top:30%;
+	margin-left:15%;
+}
+
+.search-box{
+	float:left;
+}
+
+.input-box{
+	background: none transparent scroll repeat 0% 0%;
+}
+
+.search-button{
+	float:left;
+}
+.weather-detail{
+	margin-top:20%;
+	margin-left:15%;
+}
+
+.city{
+	font-size:20px;
+}
+
+.weather-icon{
+	line-height:100%;
+}
+
+.weather{
+	font-size:20px;
+}
+
+.temperature{
+	font-size:35px;
+}
+
+.air{
+	font-size:20px;
+}
+
+.air_num{
+	font-size:20px;
+}
